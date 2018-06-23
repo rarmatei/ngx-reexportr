@@ -1,6 +1,6 @@
 {
   "name": "ngx-reexportr",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Simplify complex variables in Angular templates",
   "scripts": {
     "ng": "ng",
