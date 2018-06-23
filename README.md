@@ -1,27 +1,90 @@
-# NgReexportrLib
+# Ngx-ReExportr
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
+Very simple utility directive that re-exports a given input as a new variable.
 
-## Development server
+```html
+<div *reExportr="(user$ | async) as user"> {{user.name}} </div>
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Example
 
-## Code scaffolding
+The code below will result in 3 separate subscriptions to `user$`. It also adds some unnecessary bloat:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```html
+User info:
+<div> Name: {{(user$ | async)?.name}}</div>
+<p> Intro: {{(user$ | async)?.description}}</p>
+<span> E-mail: {{(user$ | async)?.email}}</span>
+```
 
-## Build
+You can re-export your `| async` pipe result to a variable:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```html
+<ng-container *reExportr="(user$ | async) as user">
+    User info:
+    <div> Name: {{user?.name}}</div>
+    <p> Intro: {{(user?.description}}</p>
+    <span> E-mail: {{user?.email}}</span>
+</ng-container>
+```
 
-## Running unit tests
+This creates a **single subscription** to `$user` and it also looks a bit neater.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Another use-case would be when we need to target a sub-tree of an object multiple times:
 
-## Running end-to-end tests
+```html
+<!-- without re-exportr -->
+First post preview:
+<h1> {{state.posts[0].title}} </h1>
+<p> {{state.posts[0].previewText}}
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+<!-- with re-exportr -->
+First post preview:
+<ng-container *reExportr="state.posts[0] as firstPost">
+    <h1> {{firstPost.title}} </h1>
+    <p> {{firstPost.previewText}}
+</ng-container>
+```
 
-## Further help
+## What about \*ngIf?
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+All of the examples above can also be written with `*ngIf`:
+
+```html
+<ng-container *ngIf="(user$ | async) as user">
+    User info:
+    <div> Name: {{user?.name}}</div>
+    <p> Intro: {{(user?.description}}</p>
+    <span> E-mail: {{user?.email}}</span>
+</ng-container>
+```
+
+However, if the observable takes a long time to emit, it throws an error, or it simply emits an `undefined` user, everything inside the `ng-container` element will be removed from the DOM.
+
+Sometimes, that's desireable, as you might not want to display a template designed to display some data without the actual data. But it could also result in the UI jumping a lot, while it collapses or re-expands itself based on the availability of the data.
+
+`ngx-reexportr` always displays your template, even when the data is not available, and leaves it to you to decide how to fill it.
+
+## How to run
+
+1.  `npm i ngx-reexportr --save`
+
+2.  Import the module
+
+```ts
+import { ReExportrModule } from "ngx-reexportr";
+
+@NgModule({
+  imports: [ReExportrModule]
+})
+export class AppModule {}
+```
+
+3.  Add to your templates
+
+```html
+<ng-container *reExportr="(user$ | async) as user">
+    <h2> Name: {{user.name}} </h2>
+    <p> {{user.description}} </p>
+</ng-container>
+```
