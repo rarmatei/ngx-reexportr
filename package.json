@@ -1,6 +1,7 @@
 {
   "name": "ngx-reexportr",
   "version": "0.0.1",
+  "description": "Simplify complex variables in Angular templates",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -12,6 +13,18 @@
     "publish": "npm run packagr && npm publish dist"
   },
   "private": false,
+  "keywords": [
+    "angular",
+    "ng",
+    "ng2",
+    "angular2"
+  ],
+  "author": "Rares Matei <matei.rar@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rarmatei/ngx-reexportr.git"
+  },
   "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
   "lib": {
     "entryFile": "public_api.ts"
