@@ -23,7 +23,7 @@ You can re-export your `| async` pipe result to a variable:
 <ng-container *reExportr="(user$ | async) as user">
     User info:
     <div> Name: {{user?.name}}</div>
-    <p> Intro: {{(user?.description}}</p>
+    <p> Intro: {{user?.description}}</p>
     <span> E-mail: {{user?.email}}</span>
 </ng-container>
 ```
